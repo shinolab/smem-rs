@@ -4,7 +4,7 @@
  * Created Date: 31/10/2022
  * Author: Shun Suzuki
  * -----
- * Last Modified: 31/10/2022
+ * Last Modified: 01/11/2022
  * Modified By: Shun Suzuki (suzuki@hapis.k.u-tokyo.ac.jp)
  * -----
  * Copyright (c) 2022 Shun Suzuki. All rights reserved.
@@ -81,7 +81,7 @@ impl SMem {
         unsafe {
             self.ptr = nix::libc::shmat(self.seg_id, std::ptr::null(), 0) as *mut u8;
         }
-        return self.ptr;
+        self.ptr
     }
 
     pub fn unmap(&mut self) {
