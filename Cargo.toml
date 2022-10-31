@@ -1,0 +1,21 @@
+[package]
+name = "smem"
+description = "A cross-platform thin wrapper for shared memory"
+version = "0.1.0"
+edition = "2021"
+authors = ["Shun Suzuki <suzuki@hapis.k.u-tokyo.ac.jp>"]
+license = "MIT"
+
+readme = "README.md"
+documentation = "https://docs.rs/smem"
+repository = "https://github.com/shinolab/smem-rs"
+exclude = [".github/*"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[target.'cfg(unix)'.dependencies]
+nix = "0.25.0"
+
+[dependencies]
+anyhow = "1.0.66"
+thiserror = "1.0.37"
