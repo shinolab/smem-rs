@@ -43,7 +43,7 @@ impl SMem {
         unsafe {
             let key = nix::libc::ftok(std::ffi::CString::new(self.key_path.as_str())?.as_ptr(), ID);
             if key == -1 {
-                return Err(SMemError::GetKeyFailed {
+                return Err(SMemError::GetKey {
                     errno: nix::errno::errno(),
                 }
                 .into());
@@ -61,13 +61,13 @@ impl SMem {
                 if nix::errno::errno() == 17 {
                     self.seg_id = nix::libc::shmget(key, 0, 0);
                     if self.seg_id == -1 {
-                        return Err(SMemError::GetSharedMemoryFailed {
+                        return Err(SMemError::GetSharedMemory {
                             errno: nix::errno::errno(),
                         }
                         .into());
                     }
                 } else {
-                    return Err(SMemError::CreateSharedMemoryFailed {
+                    return Err(SMemError::CreateSharedMemory {
                         errno: nix::errno::errno(),
                     }
                     .into());
@@ -85,7 +85,7 @@ impl SMem {
     }
 
     pub fn unmap(&mut self) {
-        if self.ptr == std::ptr::null_mut() {
+        if self.ptr.is_null() {
             return;
         }
         unsafe {
@@ -111,7 +111,13 @@ impl SMem {
 
 impl Drop for SMem {
     fn drop(&mut self) {
-        let _ = self.unmap();
-        let _ = self.close();
+        self.unmap();
+        _ = self.close();
+    }
+}
+
+impl Default for SMem {
+    fn default() -> Self {
+        Self::new()
     }
 }
